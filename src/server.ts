@@ -9,8 +9,16 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(pedidoRoutes);
 
-connectToDatabase();
+// 🚀 Use função async para garantir que o banco conecte antes de subir o servidor
+async function startServer() {
+  try {
+    await connectToDatabase();
+    app.listen(port, () => {
+      console.log(`🚀 Servidor rodando em http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error('Erro ao iniciar servidor:', error);
+  }
+}
 
-app.listen(port, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${port}`);
-});
+startServer();
